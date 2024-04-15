@@ -7,6 +7,9 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
+// Update the base URL to the deployment URL provided by Vercel
+const BASE_URL = "https://your-vercel-app.vercel.app"; // Replace with your Vercel deployment URL
+
 app.post("/todo", async function(req, res) {
     const createPayload = req.body;
     const parsedPayload = createTodo.safeParse(createPayload);
@@ -53,6 +56,7 @@ app.delete("/todo/:id", async function(req, res) {
 });
 
 
-app.listen(3001, () => {
-    console.log(`Server is running on port ${3001}`);
+// Vercel assigns a port dynamically, so you don't need to hardcode it
+app.listen(process.env.PORT || 3001, () => {
+    console.log(`Server is running on port ${process.env.PORT || 3001}`);
 });
