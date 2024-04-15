@@ -3,9 +3,11 @@ const { createTodo } = require("./type");
 const { todo } = require("./db");
 const cors = require("cors");
 const app = express();
-
+const userRouter = require('./routes/user')
 app.use(express.json());
 app.use(cors());
+
+
 
 app.post("/todo", async function(req, res) {
     const createPayload = req.body;
@@ -68,6 +70,8 @@ app.delete("/todo/:id", async function(req, res) {
         });
     }
 });
+
+app.use('/user',userRouter)
 
 app.listen(process.env.PORT || 3001, () => {
     console.log(`Server is running on port ${process.env.PORT || 3001}`);

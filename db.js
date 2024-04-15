@@ -9,8 +9,17 @@ const todoSchema = mongoose.Schema({
     completed:Boolean
 })
 
+const UserSchema = new mongoose.Schema({
+    username:String,
+    password:String,
+
+});
+
 const todo = mongoose.model("todos",todoSchema);
+const User = mongoose.model('User',UserSchema);
+
 
 module.exports = {
-    todo
+    todo,
+    User
 }
