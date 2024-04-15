@@ -7,9 +7,6 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-
-const BASE_URL = "https://your-vercel-app.vercel.app"; 
-
 app.post("/todo", async function(req, res) {
     const createPayload = req.body;
     const parsedPayload = createTodo.safeParse(createPayload);
@@ -40,6 +37,23 @@ app.get("/todos", async function(req, res) {
     });
 });
 
+app.put("/todo/:id", async function(req, res) {
+    const todoId = req.params.id;
+    const updatedFields = req.body;
+  
+    try {
+      await todo.findByIdAndUpdate(todoId, updatedFields);
+      res.json({
+        msg: "Todo updated"
+      });
+    } catch (error) {
+      res.status(404).json({
+        message: "Todo not found"
+      });
+    }
+  });
+  
+
 app.delete("/todo/:id", async function(req, res) {
     const todoId = req.params.id;
 
@@ -54,8 +68,6 @@ app.delete("/todo/:id", async function(req, res) {
         });
     }
 });
-
-
 
 app.listen(process.env.PORT || 3001, () => {
     console.log(`Server is running on port ${process.env.PORT || 3001}`);
