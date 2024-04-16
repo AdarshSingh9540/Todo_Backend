@@ -5,12 +5,17 @@ const { isValid } = require('zod');
 const router = Router();
 
 router.post('/signup',(req,res)=>{
-    const username  = req.body.username;
+    const email  = req.body.email;
     const password = req.body.password;
+    const firstname = req.body.firstname;
+    const lastname = req.body.lastname;
 
     User.create({
-        username,
-        password
+        email,
+        password,
+        firstname,
+        lastname,
+       
     })
 
     res.json({
@@ -20,10 +25,11 @@ router.post('/signup',(req,res)=>{
 
 
 router.post('/signin', async (req, res) => {
-    const { username, password } = req.body;
+    const email= req.body.email;
+    const password = req.body.password;
 
     try {
-        const user = await User.findOne({ username, password }).exec();
+        const user = await User.find({ email, password }).exec();
         if (user) {
             res.json({
                 msg: "Login successful"

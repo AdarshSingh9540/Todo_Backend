@@ -5,13 +5,17 @@ const todoSchema = mongoose.Schema({
    
     title:String,
     description:String,
-
     completed:Boolean
 })
 
 const UserSchema = new mongoose.Schema({
-    username:String,
+    firstname:String,
+    lastname:String,
+    email:String,
     password:String,
+    Todos : [{
+        
+    }]
 
 });
 
