@@ -1,7 +1,8 @@
-const { User   } = require("../dbs");
+const { User   } = require("../db");
 
 function userMiddleware(req,res,next){
-    const { username, password } = req.body
+    const { email, password, firstname, lastname } = req.body;
+
     User.findOne({
         firstname:firstname,
         lastname:lastname,

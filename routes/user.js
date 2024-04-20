@@ -1,8 +1,9 @@
 const { Router } = require('express');
 const bcrypt = require('bcrypt');
-const { User } = require('../db');
-const jwt = require('jsonwebtoken');
+const { todo, User } = require('../db');
 
+const jwt = require('jsonwebtoken');
+const userMiddleware = require('../middleware/user')
 const router = Router();
 
 // Generate JWT token
@@ -43,28 +44,37 @@ router.post('/signup', async (req, res) => {
 // Signin Route
 router.post('/signin', async (req, res) => {
     try {
-        const { email, password } = req.body;
-
-        // Find user by email
-        const user = await User.findOne({ email }).exec();
-        if (!user) {
-            return res.status(401).json({ msg: "Invalid credentials" });
-        }
-
-        // Check password
-        const passwordMatch = await bcrypt.compare(password, user.password);
-        if (!passwordMatch) {
-            return res.status(401).json({ msg: "Invalid credentials" });
-        }
-
-        // Generate JWT token
-        const token = generateToken(user._id);
-
-        return res.json({ msg: "Login successful", token });
+        // Signin logic
     } catch (error) {
         console.error("Error during signin:", error);
         return res.status(500).json({ msg: "Internal server error" });
     }
 });
+
+// Add todo for a user
+router.post('/todo', userMiddleware, async (req, res) => {
+    const { userId } = req.body; // Assuming userId is sent along with the request
+
+    try {
+        // Create a new todo
+        const newTodo = await todo.create({
+            title: req.body.title,
+            description: req.body.description,
+            completed: req.body.completed || false 
+        });
+
+        // Push the new todo's _id into the Todos array of the user
+        await User.findByIdAndUpdate(userId, { $push: { Todos: newTodo._id } });
+
+        res.json({
+            msg: "Todo created successfully",
+            todo: newTodo
+        });
+    } catch (error) {
+        console.error("Error creating todo:", error);
+        res.status(500).json({ msg: "Internal server error" });
+    }
+});
+
 
 module.exports = router;
